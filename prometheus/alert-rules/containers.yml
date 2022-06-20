@@ -1,0 +1,11 @@
+groups:
+- name: containers.rules
+  rules:
+  - alert: Cointainer-Down
+    expr:  time() - count_over_time(container_last_seen{name!="", container_label_restartcount!=""}[1h]) > 60
+    for: 3m
+    labels:
+      severity: critical
+    annotations:
+      summary: " {{ $labels.name }}"
+      description: "Instance down\n``` • Application: {{ $labels.name }}```\n"
